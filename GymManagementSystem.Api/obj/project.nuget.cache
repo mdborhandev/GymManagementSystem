@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZMhX3NXZ2NI=",
+  "success": true,
+  "projectFilePath": "/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Api/GymManagementSystem.Api.csproj",
+  "expectedPackageFiles": [
+    "/home/borhan-uddin-fahim/.nuget/packages/fluentvalidation/12.1.1/fluentvalidation.12.1.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/fluentvalidation.dependencyinjectionextensions/12.1.1/fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/10.0.3/microsoft.aspnetcore.authentication.jwtbearer.10.0.3.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.aspnetcore.openapi/10.0.3/microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.abstractions/8.0.1/microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.0.1/microsoft.identitymodel.jsonwebtokens.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.logging/8.0.1/microsoft.identitymodel.logging.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.protocols/8.0.1/microsoft.identitymodel.protocols.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.protocols.openidconnect/8.0.1/microsoft.identitymodel.protocols.openidconnect.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.identitymodel.tokens/8.0.1/microsoft.identitymodel.tokens.8.0.1.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/home/borhan-uddin-fahim/.nuget/packages/system.identitymodel.tokens.jwt/8.0.1/system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

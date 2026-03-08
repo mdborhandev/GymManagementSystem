@@ -1,0 +1,11 @@
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/bin/Debug/net10.0/GymManagementSystem.Shared.deps.json
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/bin/Debug/net10.0/GymManagementSystem.Shared.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/bin/Debug/net10.0/GymManagementSystem.Shared.pdb
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.GeneratedMSBuildEditorConfig.editorconfig
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.AssemblyInfoInputs.cache
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.AssemblyInfo.cs
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.csproj.CoreCompileInputs.cache
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/refint/GymManagementSystem.Shared.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/GymManagementSystem.Shared.pdb
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Shared/obj/Debug/net10.0/ref/GymManagementSystem.Shared.dll
