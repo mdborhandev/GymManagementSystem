@@ -19,3 +19,4 @@
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Identity/obj/Debug/net10.0/refint/GymManagementSystem.Identity.dll
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Identity/obj/Debug/net10.0/GymManagementSystem.Identity.pdb
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Identity/obj/Debug/net10.0/ref/GymManagementSystem.Identity.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Identity/obj/Debug/net10.0/GymManagementSystem.Identity.sourcelink.json

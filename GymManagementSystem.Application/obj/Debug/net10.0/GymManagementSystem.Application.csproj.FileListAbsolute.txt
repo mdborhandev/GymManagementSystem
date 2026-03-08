@@ -15,3 +15,4 @@
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Application/obj/Debug/net10.0/refint/GymManagementSystem.Application.dll
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Application/obj/Debug/net10.0/GymManagementSystem.Application.pdb
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Application/obj/Debug/net10.0/ref/GymManagementSystem.Application.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Application/obj/Debug/net10.0/GymManagementSystem.Application.sourcelink.json

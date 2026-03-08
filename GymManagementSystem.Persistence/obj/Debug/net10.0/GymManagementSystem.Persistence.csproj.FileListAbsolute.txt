@@ -19,3 +19,4 @@
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Persistence/obj/Debug/net10.0/GymManagementSystem.Persistence.pdb
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Persistence/obj/Debug/net10.0/GymManagementSystem.Persistence.genruntimeconfig.cache
 /home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Persistence/obj/Debug/net10.0/ref/GymManagementSystem.Persistence.dll
+/home/borhan-uddin-fahim/DRIVE A/Projects/GymManagementSystem/GymManagementSystem.Persistence/obj/Debug/net10.0/GymManagementSystem.Persistence.sourcelink.json

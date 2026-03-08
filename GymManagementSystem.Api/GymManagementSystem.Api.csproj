@@ -9,11 +9,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\GymManagementSystem.Application\GymManagementSystem.Application.csproj" />
     <ProjectReference Include="..\GymManagementSystem.Infrastructure\GymManagementSystem.Infrastructure.csproj" />
+    <ProjectReference Include="..\GymManagementSystem.Persistence\GymManagementSystem.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
