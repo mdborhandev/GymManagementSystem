@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GymManagementSystem.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6d8b3506bfe514de12a4f1fa4ebe078060e4dcd2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3d6fcd22886805a6e7a4ef64fa11e3e5c323e529")]
 [assembly: System.Reflection.AssemblyProductAttribute("GymManagementSystem.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GymManagementSystem.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
