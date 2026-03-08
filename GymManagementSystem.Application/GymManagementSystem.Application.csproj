@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GymManagementSystem.Domain\GymManagementSystem.Domain.csproj" />
-    <ProjectReference Include="..\GymManagementSystem.Shared\GymManagementSystem.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

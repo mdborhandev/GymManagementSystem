@@ -2,8 +2,5 @@
   <Project Path="GymManagementSystem.Api/GymManagementSystem.Api.csproj" />
   <Project Path="GymManagementSystem.Application/GymManagementSystem.Application.csproj" />
   <Project Path="GymManagementSystem.Domain/GymManagementSystem.Domain.csproj" />
-  <Project Path="GymManagementSystem.Identity/GymManagementSystem.Identity.csproj" />
-  <Project Path="GymManagementSystem.Infrastructure/GymManagementSystem.Infrastructure.csproj" />
   <Project Path="GymManagementSystem.Persistence/GymManagementSystem.Persistence.csproj" />
-  <Project Path="GymManagementSystem.Shared/GymManagementSystem.Shared.csproj" />
 </Solution>
