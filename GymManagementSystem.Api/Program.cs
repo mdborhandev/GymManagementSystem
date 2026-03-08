@@ -1,4 +1,6 @@
+using GymManagementSystem.Application.Interfaces.Persistence;
 using GymManagementSystem.Persistence.Context;
+using GymManagementSystem.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,8 @@ builder.Services.AddOpenApi();
 // Configure DbContext with PostgreSQL
 builder.Services.AddDbContext<GymManagementDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
