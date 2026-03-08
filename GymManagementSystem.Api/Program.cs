@@ -17,6 +17,29 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
+// Apply pending migrations and validate DB connectivity during startup.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<GymManagementDbContext>();
+
+    try
+    {
+        await dbContext.Database.MigrateAsync();
+
+        if (!await dbContext.Database.CanConnectAsync())
+        {
+            throw new InvalidOperationException("Database connectivity validation failed after migration.");
+        }
+
+        app.Logger.LogInformation("Database migration and connectivity check completed successfully.");
+    }
+    catch (Exception ex)
+    {
+        app.Logger.LogCritical(ex, "Database startup validation failed. Check PostgreSQL and connection string.");
+        throw;
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
