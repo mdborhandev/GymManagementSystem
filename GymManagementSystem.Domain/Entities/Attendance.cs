@@ -1,9 +1,8 @@
 using GymManagementSystem.Domain.Common;
-using GymManagementSystem.Domain.Interfaces;
 
 namespace GymManagementSystem.Domain.Entities;
 
-public class Attendance : BaseModel, ITenantEntity
+public class Attendance : BaseModel
 {
     public Guid MemberId { get; set; }
     public Member Member { get; set; } = default!;

@@ -4,7 +4,7 @@ public abstract class BaseModel
 {
     public Guid Id { get; set; } = default!;
     
-    // SaaS Multi-Tenancy
+    // SaaS Multi-Tenancy (Common to all entities)
     public Guid CompanyId { get; set; }
     
     // Auditing

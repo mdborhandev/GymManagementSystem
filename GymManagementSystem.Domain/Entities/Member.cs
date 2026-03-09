@@ -1,10 +1,9 @@
 using GymManagementSystem.Domain.Common;
 using GymManagementSystem.Domain.Enums;
-using GymManagementSystem.Domain.Interfaces;
 
 namespace GymManagementSystem.Domain.Entities;
 
-public class Member : BaseModel, ITenantEntity
+public class Member : BaseModel
 {
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
