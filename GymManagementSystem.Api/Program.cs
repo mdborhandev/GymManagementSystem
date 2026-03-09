@@ -54,24 +54,28 @@ using (var scope = app.Services.CreateScope())
     {
         await dbContext.Database.MigrateAsync();
         
-        // SEED DATA: Roles and Admin User
-        if (!await roleManager.RoleExistsAsync("Admin"))
-            await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
+        // SEED ROLES
+        if (!await roleManager.RoleExistsAsync("SuperAdmin"))
+            await roleManager.CreateAsync(new IdentityRole<Guid>("SuperAdmin"));
+        
+        if (!await roleManager.RoleExistsAsync("GymAdmin"))
+            await roleManager.CreateAsync(new IdentityRole<Guid>("GymAdmin"));
 
-        var adminEmail = "admin@gym.com";
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
+        // SEED SUPERADMIN USER (Platform Manager)
+        var superAdminEmail = "superadmin@gymsaas.com";
+        var superAdminUser = await userManager.FindByEmailAsync(superAdminEmail);
+        if (superAdminUser == null)
         {
-            adminUser = new ApplicationUser
+            superAdminUser = new ApplicationUser
             {
-                UserName = adminEmail,
-                Email = adminEmail,
-                FirstName = "System",
-                LastName = "Admin",
+                UserName = superAdminEmail,
+                Email = superAdminEmail,
+                FirstName = "Platform",
+                LastName = "SuperAdmin",
                 EmailConfirmed = true
             };
-            await userManager.CreateAsync(adminUser, "Admin123");
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.CreateAsync(superAdminUser, "SuperAdmin123");
+            await userManager.AddToRoleAsync(superAdminUser, "SuperAdmin");
         }
     }
     catch (Exception ex)

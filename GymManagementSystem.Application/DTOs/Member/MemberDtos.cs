@@ -34,5 +34,5 @@ public class MemberResponse
     public int StatusEnumValue { get; set; }
     public string PackageName { get; set; } = default!;
     public Guid PackageId { get; set; }
-    public Guid GymId { get; set; }
+    public Guid CompanyId { get; set; }
 }

@@ -6,7 +6,6 @@ namespace GymManagementSystem.Domain.Entities;
 
 public class Subscription : BaseModel, ITenantEntity
 {
-    public Guid GymId { get; set; }
     public Guid MemberId { get; set; }
     public Member Member { get; set; } = default!;
     

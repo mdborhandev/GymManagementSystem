@@ -6,7 +6,6 @@ namespace GymManagementSystem.Domain.Entities;
 
 public class Member : BaseModel, ITenantEntity
 {
-    public Guid GymId { get; set; }
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string FullName => $"{FirstName} {LastName}";

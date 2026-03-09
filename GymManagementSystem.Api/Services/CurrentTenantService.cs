@@ -16,14 +16,18 @@ public class CurrentTenantService : ICurrentTenantService
     {
         get
         {
-            // First check for GymId claim (from Auth Cookie)
-            var claimValue = _httpContextAccessor.HttpContext?.User?.FindFirstValue("GymId");
+            var user = _httpContextAccessor.HttpContext?.User;
+            if (user == null || !user.Identity?.IsAuthenticated == true) return null;
+
+            if (user.IsInRole("SuperAdmin")) return null;
+
+            var claimValue = user.FindFirstValue("CompanyId");
             if (Guid.TryParse(claimValue, out var gymId))
                 return gymId;
 
-            // Fallback: Check header for backward compatibility
-            var tenantIdHeader = _httpContextAccessor.HttpContext?.Request.Headers["X-Gym-Id"].ToString();
-            return Guid.TryParse(tenantIdHeader, out var headerGymId) ? headerGymId : null;
+            return null;
         }
     }
+
+    public string? CurrentUserName => _httpContextAccessor.HttpContext?.User?.Identity?.Name;
 }

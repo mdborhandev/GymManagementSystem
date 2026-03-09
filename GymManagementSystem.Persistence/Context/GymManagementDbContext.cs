@@ -1,6 +1,7 @@
 using GymManagementSystem.Application.Interfaces.Services;
 using GymManagementSystem.Domain.Entities;
 using GymManagementSystem.Domain.Interfaces;
+using GymManagementSystem.Domain.Common;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,35 +30,46 @@ public class GymManagementDbContext : IdentityDbContext<ApplicationUser, Identit
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder); // CRITICAL: Identity tables need this call
+        base.OnModelCreating(modelBuilder); 
 
-        // Apply global query filter for soft delete and multi-tenancy (only if tenant is provided)
-        modelBuilder.Entity<Member>().HasQueryFilter(m => !m.IsDelete && (_currentTenantService.TenantId == null || m.GymId == _currentTenantService.TenantId));
-        modelBuilder.Entity<Package>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.GymId == _currentTenantService.TenantId));
-        modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.GymId == _currentTenantService.TenantId));
-        modelBuilder.Entity<Staff>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.GymId == _currentTenantService.TenantId));
-        modelBuilder.Entity<Attendance>().HasQueryFilter(a => !a.IsDelete && (_currentTenantService.TenantId == null || a.GymId == _currentTenantService.TenantId));
-        modelBuilder.Entity<Subscription>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.GymId == _currentTenantService.TenantId));
+        // STRICT SAAS ISOLATION:
+        modelBuilder.Entity<Member>().HasQueryFilter(m => !m.IsDelete && (_currentTenantService.TenantId == null || m.CompanyId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Package>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.CompanyId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.CompanyId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Staff>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.CompanyId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Attendance>().HasQueryFilter(a => !a.IsDelete && (_currentTenantService.TenantId == null || a.CompanyId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Subscription>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.CompanyId == _currentTenantService.TenantId));
         
         modelBuilder.Entity<Gym>().HasQueryFilter(g => !g.IsDelete);
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        foreach (var entry in ChangeTracker.Entries<ITenantEntity>())
+        var userEmail = _currentTenantService.CurrentUserName ?? "System";
+
+        foreach (var entry in ChangeTracker.Entries<BaseModel>())
         {
             if (entry.State == EntityState.Added)
             {
+                entry.Entity.CreatedAt = DateTime.UtcNow;
+                entry.Entity.CreatedBy = userEmail;
+                
+                // SaaS: Automatically bind the company ID
                 if (_currentTenantService.TenantId.HasValue)
                 {
-                    entry.Entity.GymId = _currentTenantService.TenantId.Value;
+                    entry.Entity.CompanyId = _currentTenantService.TenantId.Value;
                 }
-                else if (entry.Entity.GymId == Guid.Empty)
+                else if (entry.Entity is Gym gym)
                 {
-                    var firstGymId = this.Gyms.IgnoreQueryFilters().FirstOrDefault()?.Id;
-                    if (firstGymId.HasValue)
-                        entry.Entity.GymId = firstGymId.Value;
+                    // For the Company itself, its CompanyId is its own Id
+                    if (gym.Id == Guid.Empty) gym.Id = Guid.NewGuid();
+                    gym.CompanyId = gym.Id;
                 }
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                entry.Entity.UpdatedAt = DateTime.UtcNow;
+                entry.Entity.UpdatedBy = userEmail;
             }
         }
 

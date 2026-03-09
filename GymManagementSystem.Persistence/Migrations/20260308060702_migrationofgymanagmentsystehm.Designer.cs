@@ -70,7 +70,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
@@ -110,7 +110,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<int>("DurationDays")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")
@@ -143,7 +143,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDeleted")

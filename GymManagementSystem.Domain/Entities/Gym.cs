@@ -1,8 +1,9 @@
 using GymManagementSystem.Domain.Common;
+using GymManagementSystem.Domain.Interfaces;
 
 namespace GymManagementSystem.Domain.Entities;
 
-public class Gym : BaseModel
+public class Gym : BaseModel, ITenantEntity
 {
     public string Name { get; set; } = default!;
     public string? Address { get; set; }

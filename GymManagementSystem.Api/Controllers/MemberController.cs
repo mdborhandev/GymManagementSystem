@@ -34,7 +34,7 @@ public class MemberController : Controller
             StatusEnumValue = (int)m.Status,
             PackageName = m.Package?.Name ?? "Unknown",
             PackageId = m.PackageId,
-            GymId = m.GymId
+            CompanyId = m.CompanyId
         });
         return Json(responses);
     }
@@ -59,7 +59,7 @@ public class MemberController : Controller
             StatusEnumValue = (int)m.Status,
             PackageName = package?.Name ?? "Unknown",
             PackageId = m.PackageId,
-            GymId = m.GymId
+            CompanyId = m.CompanyId
         });
     }
 

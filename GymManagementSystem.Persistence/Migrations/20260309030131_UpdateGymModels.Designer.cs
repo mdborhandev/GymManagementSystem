@@ -46,7 +46,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
@@ -147,7 +147,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
@@ -201,7 +201,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<int>("DurationInDays")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
@@ -243,7 +243,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
@@ -299,7 +299,7 @@ namespace GymManagementSystem.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("HireDate")
@@ -354,7 +354,7 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("GymId")
+                    b.Property<Guid>("CompanyId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")

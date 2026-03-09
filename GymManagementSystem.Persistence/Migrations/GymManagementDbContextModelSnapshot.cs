@@ -31,6 +31,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -45,9 +48,6 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid?>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -110,17 +110,20 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("CheckOutTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
@@ -133,6 +136,9 @@ namespace GymManagementSystem.Persistence.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -150,8 +156,14 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
@@ -178,6 +190,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
                     b.Property<string>("Website")
                         .HasColumnType("text");
 
@@ -195,8 +210,14 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
@@ -219,9 +240,6 @@ namespace GymManagementSystem.Persistence.Migrations
 
                     b.Property<int>("Gender")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
@@ -249,6 +267,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PackageId");
@@ -262,8 +283,14 @@ namespace GymManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
@@ -273,9 +300,6 @@ namespace GymManagementSystem.Persistence.Migrations
 
                     b.Property<int>("DurationInDays")
                         .HasColumnType("integer");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -296,6 +320,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Packages");
@@ -310,14 +337,17 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
@@ -346,6 +376,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MemberId");
@@ -359,8 +392,14 @@ namespace GymManagementSystem.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
@@ -371,9 +410,6 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("HireDate")
                         .HasColumnType("timestamp with time zone");
@@ -404,6 +440,9 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Staff");
@@ -418,17 +457,20 @@ namespace GymManagementSystem.Persistence.Migrations
                     b.Property<decimal>("AmountPaid")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
 
                     b.Property<DateTime?>("DateDeleted")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("GymId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("IsDelete")
                         .HasColumnType("boolean");
@@ -447,6 +489,9 @@ namespace GymManagementSystem.Persistence.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
