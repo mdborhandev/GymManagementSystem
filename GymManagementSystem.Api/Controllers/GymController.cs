@@ -1,75 +1,92 @@
 using GymManagementSystem.Application.DTOs.Gym;
-using GymManagementSystem.Application.Interfaces.Services;
+using GymManagementSystem.Application.Interfaces.Persistence;
+using GymManagementSystem.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementSystem.Api.Controllers;
 
 public class GymController : Controller
 {
-    private readonly IGymService _gymService;
+    private readonly IUnitOfWork _uow;
 
-    public GymController(IGymService gymService)
+    public GymController(IUnitOfWork uow)
     {
-        _gymService = gymService;
+        _uow = uow;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index() => View();
+
+    #region AJAX Endpoints
+    [HttpGet]
+    public async Task<JsonResult> GetAll()
     {
-        var gyms = await _gymService.GetAllAsync();
-        return View(gyms);
+        var gyms = await _uow.Gyms.GetAllAsync(default);
+        var responses = gyms.Select(g => new GymResponse
+        {
+            Id = g.Id,
+            Name = g.Name,
+            Address = g.Address,
+            Phone = g.Phone,
+            Email = g.Email,
+            Website = g.Website
+        });
+        return Json(responses);
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<JsonResult> GetById(Guid id)
     {
-        return View();
+        var g = await _uow.Gyms.GetByIdAsync(id, default);
+        if (g == null) return Json(null);
+        return Json(new GymResponse
+        {
+            Id = g.Id,
+            Name = g.Name,
+            Address = g.Address,
+            Phone = g.Phone,
+            Email = g.Email,
+            Website = g.Website
+        });
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateGymDto dto)
+    public async Task<JsonResult> Create([FromBody] CreateGymDto dto)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) return Json(new { success = false, message = "Invalid data" });
+        var gym = new Gym { Name = dto.Name, Address = dto.Address, Phone = dto.Phone, Email = dto.Email, Website = dto.Website };
+        await _uow.Gyms.AddAsync(gym);
+        await _uow.SaveChangesAsync();
+        return Json(new { success = true, id = gym.Id });
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> Edit([FromBody] UpdateGymDto dto)
+    {
+        if (!ModelState.IsValid) return Json(new { success = false, message = "Invalid data" });
+        var gym = await _uow.Gyms.GetByIdAsync(dto.Id, default);
+        if (gym == null) return Json(new { success = false, message = "Gym not found" });
+
+        gym.Name = dto.Name;
+        gym.Address = dto.Address;
+        gym.Phone = dto.Phone;
+        gym.Email = dto.Email;
+        gym.Website = dto.Website;
+
+        _uow.Gyms.Edit(gym);
+        await _uow.SaveChangesAsync();
+        return Json(new { success = true });
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> Delete(Guid id)
+    {
+        var gym = await _uow.Gyms.GetByIdAsync(id, default);
+        if (gym != null)
         {
-            await _gymService.CreateAsync(dto);
-            return RedirectToAction(nameof(Index));
+            _uow.Gyms.Remove(gym);
+            await _uow.SaveChangesAsync();
         }
-        return View(dto);
+        return Json(new { success = true });
     }
-
-    [HttpGet]
-    public async Task<IActionResult> Edit(Guid id)
-    {
-        var gym = await _gymService.GetByIdAsync(id);
-        if (gym == null) return NotFound();
-        
-        var updateDto = new UpdateGymDto
-        {
-            Id = gym.Id,
-            Name = gym.Name,
-            Address = gym.Address,
-            Phone = gym.Phone,
-            Email = gym.Email,
-            Website = gym.Website
-        };
-        
-        return View(updateDto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Edit(UpdateGymDto dto)
-    {
-        if (ModelState.IsValid)
-        {
-            await _gymService.UpdateAsync(dto);
-            return RedirectToAction(nameof(Index));
-        }
-        return View(dto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        await _gymService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
-    }
+    #endregion
 }

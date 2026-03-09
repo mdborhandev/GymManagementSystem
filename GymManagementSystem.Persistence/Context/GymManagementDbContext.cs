@@ -29,13 +29,13 @@ public class GymManagementDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply global query filter for soft delete and multi-tenancy
-        modelBuilder.Entity<Member>().HasQueryFilter(m => !m.IsDelete && m.GymId == _currentTenantService.TenantId);
-        modelBuilder.Entity<Package>().HasQueryFilter(p => !p.IsDelete && p.GymId == _currentTenantService.TenantId);
-        modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDelete && p.GymId == _currentTenantService.TenantId);
-        modelBuilder.Entity<Staff>().HasQueryFilter(s => !s.IsDelete && s.GymId == _currentTenantService.TenantId);
-        modelBuilder.Entity<Attendance>().HasQueryFilter(a => !a.IsDelete && a.GymId == _currentTenantService.TenantId);
-        modelBuilder.Entity<Subscription>().HasQueryFilter(s => !s.IsDelete && s.GymId == _currentTenantService.TenantId);
+        // Apply global query filter for soft delete and multi-tenancy (only if tenant is provided)
+        modelBuilder.Entity<Member>().HasQueryFilter(m => !m.IsDelete && (_currentTenantService.TenantId == null || m.GymId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Package>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.GymId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Payment>().HasQueryFilter(p => !p.IsDelete && (_currentTenantService.TenantId == null || p.GymId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Staff>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.GymId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Attendance>().HasQueryFilter(a => !a.IsDelete && (_currentTenantService.TenantId == null || a.GymId == _currentTenantService.TenantId));
+        modelBuilder.Entity<Subscription>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.GymId == _currentTenantService.TenantId));
         
         // Gym itself might not need GymId filter or it is the root
         modelBuilder.Entity<Gym>().HasQueryFilter(g => !g.IsDelete);
@@ -50,6 +50,13 @@ public class GymManagementDbContext : DbContext
                 if (_currentTenantService.TenantId.HasValue)
                 {
                     entry.Entity.GymId = _currentTenantService.TenantId.Value;
+                }
+                else if (entry.Entity.GymId == Guid.Empty)
+                {
+                    // Fallback for demo: use the first gym if no tenant is provided
+                    var firstGymId = this.Gyms.FirstOrDefault()?.Id;
+                    if (firstGymId.HasValue)
+                        entry.Entity.GymId = firstGymId.Value;
                 }
             }
         }

@@ -1,76 +1,93 @@
 using GymManagementSystem.Application.DTOs.Package;
-using GymManagementSystem.Application.Interfaces.Services;
+using GymManagementSystem.Application.Interfaces.Persistence;
+using GymManagementSystem.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementSystem.Api.Controllers;
 
 public class PackageController : Controller
 {
-    private readonly IPackageService _packageService;
+    private readonly IUnitOfWork _uow;
 
-    public PackageController(IPackageService packageService)
+    public PackageController(IUnitOfWork uow)
     {
-        _packageService = packageService;
+        _uow = uow;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index() => View();
+
+    [HttpGet]
+    public async Task<JsonResult> GetAll()
     {
-        var packages = await _packageService.GetAllAsync();
-        return View(packages);
+        var packages = await _uow.Packages.GetAllAsync(default);
+        var responses = packages.Select(p => new PackageResponse
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            DurationInDays = p.DurationInDays,
+            IsActive = p.IsActive,
+            MaxMembers = p.MaxMembers
+        });
+        return Json(responses);
     }
 
     [HttpGet]
-    public IActionResult Create()
+    public async Task<JsonResult> GetById(Guid id)
     {
-        return View();
+        var p = await _uow.Packages.GetByIdAsync(id, default);
+        if (p == null) return Json(null);
+        return Json(new PackageResponse
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Price = p.Price,
+            DurationInDays = p.DurationInDays,
+            IsActive = p.IsActive,
+            MaxMembers = p.MaxMembers
+        });
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreatePackageDto dto)
+    public async Task<JsonResult> Create([FromBody] CreatePackageDto dto)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid) return Json(new { success = false, message = "Invalid data" });
+        var package = new Package { Name = dto.Name, Description = dto.Description, Price = dto.Price, DurationInDays = dto.DurationInDays, IsActive = dto.IsActive, MaxMembers = dto.MaxMembers };
+        await _uow.Packages.AddAsync(package);
+        await _uow.SaveChangesAsync();
+        return Json(new { success = true, id = package.Id });
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> Edit([FromBody] UpdatePackageDto dto)
+    {
+        if (!ModelState.IsValid) return Json(new { success = false, message = "Invalid data" });
+        var p = await _uow.Packages.GetByIdAsync(dto.Id, default);
+        if (p == null) return Json(new { success = false, message = "Package not found" });
+
+        p.Name = dto.Name;
+        p.Description = dto.Description;
+        p.Price = dto.Price;
+        p.DurationInDays = dto.DurationInDays;
+        p.IsActive = dto.IsActive;
+        p.MaxMembers = dto.MaxMembers;
+
+        _uow.Packages.Edit(p);
+        await _uow.SaveChangesAsync();
+        return Json(new { success = true });
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> Delete(Guid id)
+    {
+        var package = await _uow.Packages.GetByIdAsync(id, default);
+        if (package != null)
         {
-            await _packageService.CreateAsync(dto);
-            return RedirectToAction(nameof(Index));
+            _uow.Packages.Remove(package);
+            await _uow.SaveChangesAsync();
         }
-        return View(dto);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> Edit(Guid id)
-    {
-        var package = await _packageService.GetByIdAsync(id);
-        if (package == null) return NotFound();
-        
-        var updateDto = new UpdatePackageDto
-        {
-            Id = package.Id,
-            Name = package.Name,
-            Description = package.Description,
-            Price = package.Price,
-            DurationInDays = package.DurationInDays,
-            IsActive = package.IsActive,
-            MaxMembers = package.MaxMembers
-        };
-        
-        return View(updateDto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Edit(UpdatePackageDto dto)
-    {
-        if (ModelState.IsValid)
-        {
-            await _packageService.UpdateAsync(dto);
-            return RedirectToAction(nameof(Index));
-        }
-        return View(dto);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        await _packageService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
+        return Json(new { success = true });
     }
 }

@@ -1,0 +1,156 @@
+@using GymManagementSystem.Domain.Enums
+@{
+    ViewData["Title"] = "Staff Management (AJAX)";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Staff Management</h1>
+    <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+        <i class="fas fa-plus"></i> Add New Staff
+    </button>
+</div>
+
+<div id="staff-table"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="staffModal" tabindex="-1" aria-labelledby="staffModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staffModalLabel">Staff Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="staffForm">
+                    <input type="hidden" id="staffId" name="id" />
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select id="role" name="role" class="form-control" asp-items="Html.GetEnumSelectList<StaffRole>()"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="salary" class="form-label">Salary</label>
+                        <input type="number" class="form-control" id="salary" name="salary" step="0.01">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
+                        <label class="form-check-label" for="isActive">Is Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveStaff()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var table;
+    $(document).ready(function () {
+        table = new Tabulator("#staff-table", {
+            ajaxURL: "/Staff/GetAll",
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            pagination: "local",
+            paginationSize: 10,
+            columns: [
+                { title: "Full Name", field: "fullName", sorter: "string", headerFilter: "input" },
+                { title: "Email", field: "email", sorter: "string" },
+                { title: "Role", field: "role", sorter: "string", hozAlign: "center" },
+                { title: "Active", field: "isActive", hozAlign: "center", formatter: "tickCross" },
+                {
+                    title: "Actions", formatter: function (cell, formatterParams, onRendered) {
+                        var id = cell.getData().id;
+                        return `<button class='btn btn-sm btn-warning me-2' onclick='openEditModal("${id}")'><i class='fas fa-edit'></i></button>` +
+                               `<button class='btn btn-sm btn-danger' onclick='deleteStaff("${id}")'><i class='fas fa-trash'></i></button>`;
+                    }, width: 150, hozAlign: "center", headerSort: false
+                }
+            ],
+        });
+    });
+
+    function openCreateModal() {
+        $('#staffForm')[0].reset();
+        $('#staffId').val('');
+        $('#staffModalLabel').text('Add New Staff');
+        $('#staffModal').modal('show');
+    }
+
+    function openEditModal(id) {
+        $.get('/Staff/GetById', { id: id }, function (data) {
+            $('#staffId').val(data.id);
+            // Splitting logic or better ResponseDto implementation
+            var nameParts = data.fullName.split(' ');
+            $('#firstName').val(nameParts[0]);
+            $('#lastName').val(nameParts.slice(1).join(' '));
+            $('#email').val(data.email);
+            // Use GetById to fetch phone/salary if not in ResponseDto or update ResponseDto
+            // For now mapping basic info
+            $('#staffModalLabel').text('Edit Staff');
+            $('#staffModal').modal('show');
+        });
+    }
+
+    function saveStaff() {
+        var id = $('#staffId').val();
+        var url = id ? '/Staff/Edit' : '/Staff/Create';
+        var data = {
+            id: id || undefined,
+            firstName: $('#firstName').val(),
+            lastName: $('#lastName').val(),
+            email: $('#email').val(),
+            phone: $('#phone').val(),
+            role: parseInt($('#role').val()),
+            salary: parseFloat($('#salary').val()),
+            isActive: $('#isActive').is(':checked')
+        };
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                if (response.success) {
+                    $('#staffModal').modal('hide');
+                    table.setData();
+                } else {
+                    alert(response.message || "Error saving staff");
+                }
+            }
+        });
+    }
+
+    function deleteStaff(id) {
+        if (confirm("Are you sure you want to delete this staff member?")) {
+            $.post('/Staff/Delete', { id: id }, function (response) {
+                if (response.success) {
+                    table.setData();
+                } else {
+                    alert("Error deleting staff");
+                }
+            });
+        }
+    }
+</script>
+}

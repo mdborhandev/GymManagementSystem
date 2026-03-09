@@ -1,41 +1,141 @@
-@model IEnumerable<GymManagementSystem.Application.DTOs.Package.PackageResponse>
-
 @{
-    ViewData["Title"] = "Packages";
+    ViewData["Title"] = "Packages (AJAX)";
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Packages</h1>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <button type="button" class="btn btn-primary" onclick="openCreateModal()">
+        <i class="fas fa-plus"></i> Add New Package
+    </button>
 </div>
 
-<table class="table table-striped table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Duration (Days)</th>
-            <th>Active</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>@item.Price</td>
-                <td>@item.DurationInDays</td>
-                <td>@(item.IsActive ? "Yes" : "No")</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure?');">
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
+<div id="package-table"></div>
+
+<!-- Modal for Create/Edit -->
+<div class="modal fade" id="packageModal" tabindex="-1" aria-labelledby="packageModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="packageModalLabel">Package Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="packageForm">
+                    <input type="hidden" id="packageId" name="id" />
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="durationInDays" class="form-label">Duration (Days)</label>
+                        <input type="number" class="form-control" id="durationInDays" name="durationInDays" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
+                        <label class="form-check-label" for="isActive">Is Active</label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="savePackage()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    var table;
+    $(document).ready(function () {
+        table = new Tabulator("#package-table", {
+            ajaxURL: "/Package/GetAll",
+            layout: "fitColumns",
+            responsiveLayout: "collapse",
+            pagination: "local",
+            paginationSize: 10,
+            columns: [
+                { title: "Name", field: "name", sorter: "string", headerFilter: "input" },
+                { title: "Price", field: "price", hozAlign: "right", formatter: "money", formatterParams: { symbol: "$" } },
+                { title: "Duration (Days)", field: "durationInDays", hozAlign: "center" },
+                { title: "Active", field: "isActive", hozAlign: "center", formatter: "tickCross" },
+                {
+                    title: "Actions", formatter: function (cell, formatterParams, onRendered) {
+                        var id = cell.getData().id;
+                        return `<button class='btn btn-sm btn-warning me-2' onclick='openEditModal("${id}")'><i class='fas fa-edit'></i></button>` +
+                               `<button class='btn btn-sm btn-danger' onclick='deletePackage("${id}")'><i class='fas fa-trash'></i></button>`;
+                    }, width: 150, hozAlign: "center", headerSort: false
+                }
+            ],
+        });
+    });
+
+    function openCreateModal() {
+        $('#packageForm')[0].reset();
+        $('#packageId').val('');
+        $('#packageModalLabel').text('Add New Package');
+        $('#packageModal').modal('show');
+    }
+
+    function openEditModal(id) {
+        $.get('/Package/GetById', { id: id }, function (data) {
+            $('#packageId').val(data.id);
+            $('#name').val(data.name);
+            $('#description').val(data.description);
+            $('#price').val(data.price);
+            $('#durationInDays').val(data.durationInDays);
+            $('#isActive').prop('checked', data.isActive);
+            $('#packageModalLabel').text('Edit Package');
+            $('#packageModal').modal('show');
+        });
+    }
+
+    function savePackage() {
+        var id = $('#packageId').val();
+        var url = id ? '/Package/Edit' : '/Package/Create';
+        var data = {
+            id: id || undefined,
+            name: $('#name').val(),
+            description: $('#description').val(),
+            price: parseFloat($('#price').val()),
+            durationInDays: parseInt($('#durationInDays').val()),
+            isActive: $('#isActive').is(':checked')
+        };
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                if (response.success) {
+                    $('#packageModal').modal('hide');
+                    table.setData();
+                } else {
+                    alert(response.message || "Error saving package");
+                }
+            }
+        });
+    }
+
+    function deletePackage(id) {
+        if (confirm("Are you sure you want to delete this package?")) {
+            $.post('/Package/Delete', { id: id }, function (response) {
+                if (response.success) {
+                    table.setData();
+                } else {
+                    alert("Error deleting package");
+                }
+            });
         }
-    </tbody>
-</table>
+    }
+</script>
+}

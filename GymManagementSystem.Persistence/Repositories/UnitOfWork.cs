@@ -11,20 +11,21 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(GymManagementDbContext context)
     {
         _context = context;
-        Gyms = new GenericRepository<Gym, Guid>(_context);
-        Members = new GenericRepository<Member, Guid>(_context);
-        Packages = new GenericRepository<Package, Guid>(_context);
+        Gyms = new GymRepository(_context);
+        Members = new MemberRepository(_context);
+        Packages = new PackageRepository(_context);
+        Staff = new StaffRepository(_context);
+        
         Payments = new GenericRepository<Payment, Guid>(_context);
-        Staff = new GenericRepository<Staff, Guid>(_context);
         Attendances = new GenericRepository<Attendance, Guid>(_context);
         Subscriptions = new GenericRepository<Subscription, Guid>(_context);
     }
 
-    public IGenericRepository<Gym, Guid> Gyms { get; }
-    public IGenericRepository<Member, Guid> Members { get; }
-    public IGenericRepository<Package, Guid> Packages { get; }
+    public IGymRepository Gyms { get; }
+    public IMemberRepository Members { get; }
+    public IPackageRepository Packages { get; }
+    public IStaffRepository Staff { get; }
     public IGenericRepository<Payment, Guid> Payments { get; }
-    public IGenericRepository<Staff, Guid> Staff { get; }
     public IGenericRepository<Attendance, Guid> Attendances { get; }
     public IGenericRepository<Subscription, Guid> Subscriptions { get; }
 
@@ -33,3 +34,8 @@ public class UnitOfWork : IUnitOfWork
         return _context.SaveChangesAsync(cancellationToken);
     }
 }
+
+// Simple specific repositories (can be in one file for now)
+public class GymRepository : GenericRepository<Gym, Guid>, IGymRepository { public GymRepository(GymManagementDbContext dbContext) : base(dbContext) { } }
+public class PackageRepository : GenericRepository<Package, Guid>, IPackageRepository { public PackageRepository(GymManagementDbContext dbContext) : base(dbContext) { } }
+public class StaffRepository : GenericRepository<Staff, Guid>, IStaffRepository { public StaffRepository(GymManagementDbContext dbContext) : base(dbContext) { } }
