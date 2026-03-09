@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementSystem.Api.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class HomeController : Controller
 {
     private readonly IUnitOfWork _uow;

@@ -1,45 +1,82 @@
 using GymManagementSystem.Api.Services;
 using GymManagementSystem.Application;
 using GymManagementSystem.Application.Interfaces.Services;
+using GymManagementSystem.Domain.Entities;
 using GymManagementSystem.Persistence;
 using GymManagementSystem.Persistence.Context;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentTenantService, CurrentTenantService>();
 
+// Configure Persistence Layer (Must be called before Identity)
+builder.Services.AddPersistence(builder.Configuration);
+
+// Configure Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddEntityFrameworkStores<GymManagementDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+});
+
 // Configure Layers
 builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
 
 var app = builder.Build();
 
-// Apply pending migrations and validate DB connectivity during startup.
+// ... existing database migration logic ...
+// (Apply pending migrations and seed data)
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<GymManagementDbContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
     try
     {
         await dbContext.Database.MigrateAsync();
+        
+        // SEED DATA: Roles and Admin User
+        if (!await roleManager.RoleExistsAsync("Admin"))
+            await roleManager.CreateAsync(new IdentityRole<Guid>("Admin"));
 
-        if (!await dbContext.Database.CanConnectAsync())
+        var adminEmail = "admin@gym.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
         {
-            throw new InvalidOperationException("Database connectivity validation failed after migration.");
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "System",
+                LastName = "Admin",
+                EmailConfirmed = true
+            };
+            await userManager.CreateAsync(adminUser, "Admin123");
+            await userManager.AddToRoleAsync(adminUser, "Admin");
         }
-
-        app.Logger.LogInformation("Database migration and connectivity check completed successfully.");
     }
     catch (Exception ex)
     {
-        app.Logger.LogCritical(ex, "Database startup validation failed. Check PostgreSQL and connection string.");
-        throw;
+        app.Logger.LogCritical(ex, "Database startup or seeding failed.");
     }
 }
 
@@ -47,7 +84,6 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    // Add this to use Swagger UI with the generated OpenAPI spec
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "Gym Management System API V1");
@@ -56,6 +92,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

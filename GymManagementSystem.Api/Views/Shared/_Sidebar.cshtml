@@ -22,5 +22,9 @@
          <a href="#" class="list-group-item list-group-item-action list-group-item-light p-3 bg-dark text-white">
             <i class="fas fa-clock me-2"></i> Attendance
         </a>
+        <form asp-action="Logout" asp-controller="Account" method="post" id="logoutForm" class="d-none"></form>
+        <a href="javascript:document.getElementById('logoutForm').submit()" class="list-group-item list-group-item-action list-group-item-light p-3 bg-danger text-white mt-auto">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+        </a>
     </div>
 </div>

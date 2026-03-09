@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GymManagementSystem.Api.Controllers;
 
+[Microsoft.AspNetCore.Authorization.Authorize]
 public class StaffController : Controller
 {
     private readonly IUnitOfWork _uow;

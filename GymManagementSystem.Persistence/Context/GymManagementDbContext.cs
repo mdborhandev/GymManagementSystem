@@ -1,11 +1,13 @@
 using GymManagementSystem.Application.Interfaces.Services;
 using GymManagementSystem.Domain.Entities;
 using GymManagementSystem.Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementSystem.Persistence.Context;
 
-public class GymManagementDbContext : DbContext
+public class GymManagementDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     private readonly ICurrentTenantService _currentTenantService;
 
@@ -27,7 +29,7 @@ public class GymManagementDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder); // CRITICAL: Identity tables need this call
 
         // Apply global query filter for soft delete and multi-tenancy (only if tenant is provided)
         modelBuilder.Entity<Member>().HasQueryFilter(m => !m.IsDelete && (_currentTenantService.TenantId == null || m.GymId == _currentTenantService.TenantId));
@@ -37,7 +39,6 @@ public class GymManagementDbContext : DbContext
         modelBuilder.Entity<Attendance>().HasQueryFilter(a => !a.IsDelete && (_currentTenantService.TenantId == null || a.GymId == _currentTenantService.TenantId));
         modelBuilder.Entity<Subscription>().HasQueryFilter(s => !s.IsDelete && (_currentTenantService.TenantId == null || s.GymId == _currentTenantService.TenantId));
         
-        // Gym itself might not need GymId filter or it is the root
         modelBuilder.Entity<Gym>().HasQueryFilter(g => !g.IsDelete);
     }
 
@@ -53,8 +54,7 @@ public class GymManagementDbContext : DbContext
                 }
                 else if (entry.Entity.GymId == Guid.Empty)
                 {
-                    // Fallback for demo: use the first gym if no tenant is provided
-                    var firstGymId = this.Gyms.FirstOrDefault()?.Id;
+                    var firstGymId = this.Gyms.IgnoreQueryFilters().FirstOrDefault()?.Id;
                     if (firstGymId.HasValue)
                         entry.Entity.GymId = firstGymId.Value;
                 }
