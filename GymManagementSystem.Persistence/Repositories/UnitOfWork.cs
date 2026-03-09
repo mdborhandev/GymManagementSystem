@@ -11,16 +11,22 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(GymManagementDbContext context)
     {
         _context = context;
-        Gyms = new GenericRepository<Gym>(_context);
-        Members = new GenericRepository<Member>(_context);
-        Packages = new GenericRepository<Package>(_context);
-        Payments = new GenericRepository<Payment>(_context);
+        Gyms = new GenericRepository<Gym, Guid>(_context);
+        Members = new GenericRepository<Member, Guid>(_context);
+        Packages = new GenericRepository<Package, Guid>(_context);
+        Payments = new GenericRepository<Payment, Guid>(_context);
+        Staff = new GenericRepository<Staff, Guid>(_context);
+        Attendances = new GenericRepository<Attendance, Guid>(_context);
+        Subscriptions = new GenericRepository<Subscription, Guid>(_context);
     }
 
-    public IGenericRepository<Gym> Gyms { get; }
-    public IGenericRepository<Member> Members { get; }
-    public IGenericRepository<Package> Packages { get; }
-    public IGenericRepository<Payment> Payments { get; }
+    public IGenericRepository<Gym, Guid> Gyms { get; }
+    public IGenericRepository<Member, Guid> Members { get; }
+    public IGenericRepository<Package, Guid> Packages { get; }
+    public IGenericRepository<Payment, Guid> Payments { get; }
+    public IGenericRepository<Staff, Guid> Staff { get; }
+    public IGenericRepository<Attendance, Guid> Attendances { get; }
+    public IGenericRepository<Subscription, Guid> Subscriptions { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
