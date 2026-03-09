@@ -1,5 +1,7 @@
+@model GymManagementSystem.Application.DTOs.DashboardViewModel
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
 <div class="container-fluid">
@@ -18,7 +20,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                 Total Members</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">150</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalMembers</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -35,7 +37,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Active Packages</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.ActivePackages</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-box fa-2x text-gray-300"></i>
@@ -52,7 +54,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                 Revenue (This Month)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$4,500</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">$@Model.TotalRevenue.ToString("N2")</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -69,7 +71,7 @@
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                 Staff Members</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">8</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">@Model.TotalStaff</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-user-tie fa-2x text-gray-300"></i>
